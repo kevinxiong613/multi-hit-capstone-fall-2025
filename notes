@@ -2,6 +2,7 @@ manifest_normal_normal.txt.test.txt.geneSampleList
 Gene | Patient ID --> all mutated
 
 BRCA.maf2dat.matrix.out.test
+Num Genes | num patients | random | titles
 Gene ID | Patient ID | # Mutations | Gene | File Name for Patient ID again
 
 result/ACC2HIT/BRCA/BRCA-combinations
