@@ -1,0 +1,9 @@
+ENSG00000133056 ENSG00000158445 108 2090 F-max =  0.542083 , num excluded 152, tot excluded 152 
+ENSG00000141510 ENSG00000149531 776 915 F-max =  0.519792 , num excluded 55, tot excluded 207 
+ENSG00000141510 ENSG00000065534 776 3510 F-max =  0.512500 , num excluded 10, tot excluded 217 
+ENSG00000204501 ENSG00000173213 10 829 F-max =  0.511875 , num excluded 7, tot excluded 224 
+ENSG00000153820 ENSG00000141510 193 776 F-max =  0.511250 , num excluded 4, tot excluded 228 
+ENSG00000141298 ENSG00000133112 792 5572 F-max =  0.511042 , num excluded 3, tot excluded 231 
+ENSG00000155657 ENSG00000133193 179 10071 F-max =  0.510833 , num excluded 2, tot excluded 233 
+ENSG00000080031 ENSG00000077782 1515 5014 F-max =  0.510833 , num excluded 2, tot excluded 235 
+Num 2-hit combinations = 8  (beta = 0.100000 )
