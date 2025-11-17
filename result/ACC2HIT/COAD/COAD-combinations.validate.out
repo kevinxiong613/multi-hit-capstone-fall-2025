@@ -1,0 +1,8 @@
+Wed Apr  4 23:47:31 EDT 2018
+Validate Tumor Test: Total 94 Found 85 frac found 0.904255
+Validate Normal Test: Total 86 Found 3 Frac found 0.0348837
+Validate Tumor All: Total 385 Found 376 frac found 0.976623
+Validate Normal All: Total 333 Found 5 Frac found 0.015015
+Validate Tumor Training: Total 291 Found 291 frac found 1
+Validate Normal Training: Total 247 Found 2 Frac found 0.00809717
+F-measure 0.996575

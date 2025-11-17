@@ -1,0 +1,354 @@
+Validating, ../result/ACC2HIT/GBM/GBM-combinations, against Normal Test samples, /home/sajal/data//maf2dat-moderate/manifest_normal_normal.txt.test.txt
+Validating Normal sample: /home/sajal/data//mut//C1663.TCGA-P8-A5KC-11A-11D-A35D-08.1_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 382
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C345.TCGA-B8-5552-11A-01D-1669-08.6_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 540
+ENSG00000198601 ENSG00000100151
+Number of combinations found: 1
+Validating Normal sample: /home/sajal/data//mut//C347.TCGA-44-3396-11A-01D-1553-08.1_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 1427
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C347.TCGA-44-3918-11A-01D-1105-08.10_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 2339
+ENSG00000198601 ENSG00000100151
+Number of combinations found: 1
+Validating Normal sample: /home/sajal/data//mut//C347.TCGA-44-3919-11A-01D-1105-08.7_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 1083
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C440.TCGA-BR-6452-11A-01D-1800-08.3_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 2470
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C440.TCGA-BR-6564-11A-01D-1882-08.6_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 577
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C440.TCGA-BR-6706-11A-01D-1882-08.6_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 455
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C440.TCGA-BR-6802-11A-01D-1882-08.6_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 445
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C440.TCGA-BR-7716-11A-01D-2053-08.2_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 433
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C440.TCGA-BR-7957-11A-01D-2201-08.6_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 348
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C440.TCGA-HU-A4GH-11A-11D-A24F-08.4_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 709
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C440.TCGA-HU-A4GN-11A-12D-A25E-08.1_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 478
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C440.TCGA-HU-A4GY-11A-11D-A24F-08.3_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 467
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C489.TCGA-B3-4104-11A-01D-1252-08.10_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 1611
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C495.TCGA-CV-5970-11A-01D-1683-08.2_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 992
+ENSG00000125498 ENSG00000166272
+Number of combinations found: 1
+Validating Normal sample: /home/sajal/data//mut//C495.TCGA-CV-6934-11A-01D-1912-08.4_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 1109
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C495.TCGA-CV-6935-11A-01D-1912-08.4_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 654
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C495.TCGA-CV-6939-11A-01D-1912-08.4_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 547
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C495.TCGA-CV-6951-11A-01D-1912-08.4_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 1117
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C495.TCGA-CV-6954-11A-01D-1912-08.4_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 535
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C495.TCGA-CV-6959-11A-01D-1912-08.4_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 1184
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C495.TCGA-CV-6960-11A-01D-2012-08.1_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 815
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C495.TCGA-CV-7095-11A-01D-2012-08.1_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 3013
+ENSG00000127481 ENSG00000158445
+ENSG00000177731 ENSG00000124092
+Number of combinations found: 2
+Validating Normal sample: /home/sajal/data//mut//C495.TCGA-CV-7101-11A-01D-2012-08.1_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 691
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C495.TCGA-CV-7178-11A-01D-2012-08.1_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 1099
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C495.TCGA-CV-7248-11A-01D-2012-08.1_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 456
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C495.TCGA-CV-7255-11A-01D-2012-08.1_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 713
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C495.TCGA-CV-7263-11A-01D-2012-08.1_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 565
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C495.TCGA-CV-7416-11A-01D-2078-08.1_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 414
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C495.TCGA-CV-7423-11A-01D-2078-08.1_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 453
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C495.TCGA-CV-7430-11A-01D-2129-08.1_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 470
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C499.TCGA-BJ-A28W-11A-11D-A16O-08.4_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 456
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C499.TCGA-BJ-A290-11A-11D-A17V-08.1_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 2726
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C499.TCGA-BJ-A2N7-11A-11D-A18F-08.1_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 505
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C499.TCGA-BJ-A3PU-11A-11D-A21Z-08.2_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 353
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C499.TCGA-BJ-A45E-11A-11D-A23U-08.3_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 452
+ENSG00000125498 ENSG00000166272
+Number of combinations found: 1
+Validating Normal sample: /home/sajal/data//mut//C499.TCGA-BJ-A45F-11A-21D-A23U-08.3_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 350
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C499.TCGA-EM-A1CS-11A-21D-A13W-08.5_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 1494
+ENSG00000125498 ENSG00000166272
+Number of combinations found: 1
+Validating Normal sample: /home/sajal/data//mut//C499.TCGA-H2-A3RI-11A-11D-A21Z-08.2_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 468
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C500.TCGA-CU-A0YR-11A-13D-A10S-08.4_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 1152
+ENSG00000177731 ENSG00000124092
+Number of combinations found: 1
+Validating Normal sample: /home/sajal/data//mut//C500.TCGA-GC-A6I3-11A-11D-A31L-08.2_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 420
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C500.TCGA-K4-A3WV-11A-21D-A22Z-08.9_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 388
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C500.TCGA-K4-A6FZ-11A-12D-A31L-08.2_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 336
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C508.TCGA-43-6771-11A-01D-1817-08.2_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 502
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C508.TCGA-56-8504-11A-01D-2395-08.1_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 638
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C508.TCGA-56-8622-11A-01D-2395-08.1_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 617
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C508.TCGA-56-8628-11A-01D-2395-08.1_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 379
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C508.TCGA-56-8629-11A-01D-2395-08.1_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 615
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C509.TCGA-44-6776-11A-01D-1855-08.2_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 460
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C509.TCGA-44-6778-11A-01D-1855-08.2_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 491
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C509.TCGA-44-7667-11A-01D-2063-08.2_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 1929
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C509.TCGA-44-7669-11A-01D-2063-08.2_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 619
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C509.TCGA-44-7670-11A-01D-2063-08.2_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 524
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C509.TCGA-55-7570-11A-01D-2036-08.2_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 427
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C509.TCGA-55-7574-11A-01D-2036-08.2_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 419
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C509.TCGA-55-7576-11A-01D-2063-08.2_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 615
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C509.TCGA-91-6828-11A-01D-1855-08.2_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 457
+ENSG00000125498 ENSG00000166272
+Number of combinations found: 1
+Validating Normal sample: /home/sajal/data//mut//C529.TCGA-EJ-7327-11A-01D-2114-08.2_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 503
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C529.TCGA-EJ-7328-11A-01D-2114-08.1_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 394
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C529.TCGA-G9-6353-11A-02D-1961-08.2_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 908
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C529.TCGA-G9-6364-11A-01D-1786-08.3_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 439
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C529.TCGA-G9-6373-11A-01D-1786-08.9_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 341
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C529.TCGA-G9-6499-11A-02D-1961-08.2_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 1008
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C529.TCGA-HC-7752-11A-01D-2114-08.1_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 416
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C546.TCGA-H6-8124-11A-01D-2396-08.8_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 1818
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C662.TCGA-44-6145-11A-01D-1753-08.4_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 466
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//C828.TCGA-FW-A3R5-11A-11D-A23B-08.2_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 420
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//TCGA-A4-A57E-11A-11D-A26P-10_Illumina_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 333
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//TCGA-A6-2674-11A-01D-1554-10_Illumina_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 738
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//TCGA-A6-5661-11A-01D-1650-10_Illumina_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 95
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//TCGA-AA-3532-11A-01D-1554-10_Illumina_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 289
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//TCGA-B2-5639-11A-01D-1534-10_Illumina_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 207
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//TCGA-BH-A0BA-11A-22W-A100-09_HOLD_QC_PENDING_IlluminaGA-DNASeq_exome_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 2204
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//TCGA-BH-A0E1-11A-13W-A100-09_HOLD_QC_PENDING_IlluminaGA-DNASeq_exome_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 540
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//TCGA-BH-A0H9-11A-22W-A10F-09_HOLD_QC_PENDING_IlluminaGA-DNASeq_exome_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 1803
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//TCGA-DD-A113-11A-12D-A12Z-10_Illumina_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 1268
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//TCGA-DD-A119-11A-11D-A12Z-10_Illumina_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 346
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//TCGA-DD-A4NO-11A-11D-A28X-10_Illumina_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 335
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//TCGA-DD-A4NP-11A-11D-A28X-10_Illumina_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 309
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//TCGA-DD-A4NQ-11A-11D-A28X-10_Illumina_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 296
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//TCGA-GL-A9DE-11A-11D-A370-10_Illumina_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 658
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//TCGA-K7-A5RG-11A-12D-A28X-10_Illumina_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 373
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//TCGA-LG-A6GG-11A-11D-A30V-10_Illumina_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 514
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//TCGA-Y8-A8RY-11A-11D-A370-10_Illumina_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 621
+Number of combinations found: 0
+Validating Normal sample: /home/sajal/data//mut//TCGA-Y8-A8S1-11A-11D-A370-10_Illumina_gdc_realn.bam.mut
+   using: ../result/ACC2HIT/GBM/GBM-combinations
+Number of mutated genes: 586
+Number of combinations found: 0
