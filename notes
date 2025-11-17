@@ -1,9 +1,31 @@
-manifest_normal_normal.txt.test.txt.geneSampleList
-Gene | Patient ID --> all mutated
+# Multi-Hit Cancer Analysis Project
 
-BRCA.maf2dat.matrix.out.test
-Gene ID | Patient ID | # Mutations | Gene | File Name for Patient ID again
+## Root Files/Folders:
+- **README.md**: Overview of multi-hit combination algorithm for cancer mutation analysis
+- **src/**: Source code directory containing C programs and Python scripts
+- **data/**: Input data directory with mutation matrices and manifest files
+- **result/**: Output directory containing identified gene combinations
+- **s41598-018-37835-6.pdf**: Research paper reference
 
-result/ACC2HIT/BRCA/BRCA-combinations
+## src/ Directory:
+- **acc2hit.c**: Main algorithm to identify multi-hit combinations using likelihood ratio
+- **validate2hit.c**: Validation program for 3-hit gene combinations 
+- **validateNormal2hit.py**: Python script to validate normal samples against combinations
+- **compute-multihit-combinations.sh**: Shell script to run full analysis pipeline
 
-2 gene combo | F-max score | IDK
+## data/maf2dat-moderate/ Directory:
+- **BRCA.maf2dat.matrix.out**: Full BRCA mutation matrix (genes x samples)
+- **BRCA.maf2dat.matrix.out.training**: Training subset of BRCA data
+- **BRCA.maf2dat.matrix.out.test**: Test subset of BRCA data
+- **manifest_normal_normal.txt**: Normal tissue sample manifest
+- **manifest_normal_normal.txt.geneSampleList**: Gene-sample mutation list for normal tissue
+
+## result/ Directory:
+- **ACC2HIT/**: Contains output combinations for different cancer types
+- **BRCA/**: BRCA-specific results with identified gene combinations and scores
+
+## Data Format Notes:
+- Mutation matrices: Gene ID | Patient ID | # Mutations | Gene | Sample File
+- Gene sample lists: Gene | Patient ID (mutated genes per sample)
+- Combinations output: 2-gene combo | F-max score | Additional metrics
+
