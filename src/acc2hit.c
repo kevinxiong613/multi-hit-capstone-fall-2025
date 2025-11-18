@@ -70,35 +70,57 @@ void getNumGenesSamplesTumor( FILE *fp_gene_sample_matrix, int *num_genes, int *
 void loadGeneSampleMatrixTumor( FILE *fp_gene_sample_matrix, int num_genes, 
    int num_samples, int *gene_sample_matrix, char *gene_id, int *tumor_samples_per_gene )
 {
+   
    int     i, j, k, n, ret_value;
    char    *line = NULL;
    char    *gene, *sample;
    size_t  len = 0;
    ssize_t read;
 
+   // Malloc these to store one string, I think NAME_LEN is just the maximum length for buffering purposes?
    gene   = (char *)malloc( NAME_LEN * sizeof( char ) );
    sample = (char *)malloc( NAME_LEN * sizeof( char ) );
 
    /* initialize matrix */
+   // Remember, when allocating tumor matrix, num_genes was rows and num_samples was columns
+   /*
+   tumor_matrix = (int  *)malloc( num_genes * num_samples * sizeof( int ) );
+   gene_id = (char  *)malloc( num_genes * NAME_LEN * sizeof( char ));
+   tumor_samples_per_gene = (int  *)malloc( num_genes * sizeof( int ) ); --> These were the initializations
+   */
    for ( n = 0; n < num_genes; n++ )
    {
-      tumor_samples_per_gene[n] = 0;
+      tumor_samples_per_gene[n] = 0; // set these all to 0
       for ( j = 0; j < num_samples; j++ )
       {
-         gene_sample_matrix[n * num_samples + j] = 0;
+         gene_sample_matrix[n * num_samples + j] = 0; // pointer arithmetic to set this all to 0
       }
    }
 
+   // feof checks whether the end-of-file flag is seton the given FILE*
+   // WRONG: only returns true AFTER trying to read past end of the file
+   // Only getline moves the file pointer, so after getline reads the last line, 
+   // feof will still return False, and getline will now read and return -1,
+
+   // feof only reports that we ALREADY FAILED to read something
    while ( !feof( fp_gene_sample_matrix ) )
    {
+      // get an entire line from the file pointer, fp_gene_sample_matrix, again, and len is updated too
       read = getline( &line, &len, fp_gene_sample_matrix );
-      ret_value = sscanf( line, "%d %d %d %s %s", &i, &j, &k, gene, sample );
+      // Read the lines values into i, j, k as integers, and gene, sample as strings
+      // i = gene identification
+      // j = patient id
+      // k = # of mutations
+      ret_value = sscanf( line, "%d %d %d %s %s", &i, &j, &k, gene, sample ); 
       if ( ret_value == 5 )
       {
+         // store the gene into geneid
          strcpy( gene_id+(i*NAME_LEN), gene );
+         // for this gene, for this patient, indicate the number of mutations
          gene_sample_matrix[i * num_samples + j] = k;
          if ( k > 0 )
          {
+            // there was a mutation for this gene, increment
             tumor_samples_per_gene[i]++;
          }
       }
@@ -505,6 +527,8 @@ int main(int argc, char ** argv)
       printf( "ERROR: failed to allocate memory for tumor samples per gene \n" );
       exit( 1 );
    }
+   // pass the allocated file pointer to the data, number of genes, number of patient samples, allocated tumor matrix, 
+   // allocated list for gene ids, and allocated list for tumor samples per gene
    loadGeneSampleMatrixTumor( fp_tumor_matrix, num_genes, num_samples, 
       tumor_matrix, gene_id, tumor_samples_per_gene );
 
