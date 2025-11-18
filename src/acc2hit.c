@@ -483,6 +483,7 @@ int main(int argc, char ** argv)
    printf( "Num Tumor genes = %d tumor samples = %d \n", num_genes, num_samples );
 
    // allocate memory for a matrix of [num_genes][num_samples], samples is # of patient IDs
+   // Also casted the result to be an integer pointer
    tumor_matrix = (int  *)malloc( num_genes * num_samples * sizeof( int ) );
    if ( tumor_matrix == NULL )
    {
@@ -490,13 +491,14 @@ int main(int argc, char ** argv)
       exit( 1 );
    }
 
-
+   // Name_LEN is 2, why? Casted result to be integer pointer
    gene_id = (char  *)malloc( num_genes * NAME_LEN * sizeof( char ));
    if ( gene_id == NULL )
    {
       printf( "ERROR: failed to allocate memory for gene_ids \n" );
       exit( 1 );
    }
+   // Have space for an integer for each number of genes
    tumor_samples_per_gene = (int  *)malloc( num_genes * sizeof( int ) );
    if ( tumor_samples_per_gene == NULL )
    {
