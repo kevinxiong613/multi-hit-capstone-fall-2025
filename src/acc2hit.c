@@ -114,7 +114,7 @@ void loadGeneSampleMatrixTumor( FILE *fp_gene_sample_matrix, int num_genes,
       ret_value = sscanf( line, "%d %d %d %s %s", &i, &j, &k, gene, sample ); 
       if ( ret_value == 5 )
       {
-         // store the gene into geneid
+         // store the gene into geneid, which is a buffer
          strcpy( gene_id+(i*NAME_LEN), gene );
          // for this gene, for this patient, indicate the number of mutations
          gene_sample_matrix[i * num_samples + j] = k;
@@ -205,18 +205,22 @@ void loadGeneSampleMatrixNormal( FILE *fp_gene_sample_list, int num_genes,
    int     max_samples = 1000; /* for allocation of sample_id list */
 
    /* list of old to new (sequential excluding missing numbers) sample ids */
+   // max_samples seems to be arbitrary, it is just bigger than the number of patients/samples
    sample_id = (int *)malloc( max_samples * sizeof( int ) );
    if ( sample_id == NULL )
    {
       printf( "ERROR: failed to allocate memory for normal gene_sample_matrix \n" );
      exit( 1 );
    }
+
+   // initialize everything to -1 for now in this
    for ( j = 0; j < max_samples; j++ )
    {
       sample_id[j] = -1;
    }
 
    /* initialize matrix */
+   // Same as initialization for loadTumor
    for ( n = 0; n < num_genes; n++ )
    {
       normal_samples_per_gene[n] = 0;
@@ -227,12 +231,15 @@ void loadGeneSampleMatrixNormal( FILE *fp_gene_sample_list, int num_genes,
    }
 
    new_sample_id = 0;
+   // again, shouldn't use this paradigm for while loop
    while ( !feof( fp_gene_sample_list ) )
    {
       read = getline( &line, &len, fp_gene_sample_list );
+      // Get the gene name, and patient ID, this is mutated
       ret_value = sscanf( line, "%s %d", gene, &sample );
       if ( ret_value == 2 )
       {
+         // This logic is marking what order these came in sequentially
          if ( sample_id[sample] < 0 )
          {
             sample_id[sample] = new_sample_id;
@@ -241,13 +248,18 @@ void loadGeneSampleMatrixNormal( FILE *fp_gene_sample_list, int num_genes,
          }
          else
          {
+            // If already processed before, just get what place sequentially it came in already
             matrix_sample_index = sample_id[sample];
          }
+         // Goal is to find the index that equals this gene in gene_id
          for ( n = 0; n < num_genes; n++ )
          {
+            // Finds if the gene stored at index n is equal to the gene found from the file
             if ( strcmp( gene_id+(n*NAME_LEN), gene ) == 0 )
             {
+               // in the matrix, for this gene (row), and the patient, set to 1
                normal_matrix[n * num_samples_normal + matrix_sample_index] = 1;
+               // WHY IS THIS DOING THIS??? WHAT
                normal_samples_per_gene = 0;
                break;
             }
@@ -527,6 +539,7 @@ int main(int argc, char ** argv)
       exit( 1 );
    }
    // Have space for an integer for each number of genes
+   // For each gene, counts the number of mutations that occurs for it total across the dataset
    tumor_samples_per_gene = (int  *)malloc( num_genes * sizeof( int ) );
    if ( tumor_samples_per_gene == NULL )
    {
@@ -553,7 +566,8 @@ int main(int argc, char ** argv)
       printf( "ERROR: failed to allocate memory for normal gene_sample_matrix \n" );
      exit( 1 );
    }
-
+   
+   // same thing as tumor_sample_per_gene, count the number of mutations for each gene for normal samples
    normal_samples_per_gene = (int  *)malloc( num_genes * sizeof( int ) );
    if ( normal_samples_per_gene == NULL )
    {
@@ -566,6 +580,7 @@ int main(int argc, char ** argv)
    loadGeneSampleMatrixNormal( fp_normal_matrix, num_genes, num_samples_normal, 
       normal_matrix, gene_id, normal_samples_per_gene );
 
+   // finished reading into this so done
    fclose( fp_normal_matrix );
 
 /* Check combinations of genes for coverage of samples */
