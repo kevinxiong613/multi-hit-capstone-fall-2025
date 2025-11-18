@@ -26,6 +26,7 @@ static const int NAME_LEN = 20;
  * get count of unique genes and samples from header of input file
  *
  ************************************************************************/
+// reads first line of file, BRCA.maf2dat.matrix.out.training
 void getNumGenesSamplesTumor( FILE *fp_gene_sample_matrix, int *num_genes, int *num_samples )
 {
    int     i, j, ret_value;
@@ -34,8 +35,15 @@ void getNumGenesSamplesTumor( FILE *fp_gene_sample_matrix, int *num_genes, int *
    ssize_t read;
 
    /* First line contains number of genes and samples */
+   // getline(char **line, size_t *n, FILE* filePointer)
+   // Gets an entire line from the file pointer
    read = getline( &line, &len, fp_gene_sample_matrix );
+   // sscanf puts the values in the string into variables i and j, so i and j will have
+   // whatever the %d and %d respectively are from that line
+   // 19411 208  -1 Gene  Test  --> It'll process 19411, skip white space, process 208, then stop
    ret_value = sscanf( line, "%d %d", &i, &j );
+
+   // return value is how many items were succesfully parsed, need 2 here
    if (ret_value == 2 )
    {
       *num_genes   = i;
