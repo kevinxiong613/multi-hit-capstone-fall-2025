@@ -151,14 +151,18 @@ int getNumSamplesNormal( FILE *fp_gene_sample_list )
    ssize_t read;
 
    num_samples = last_sample = 0;
-
+   // 
    /* read to end of file */
+   // Again, error with the feof only returning True AFTER getline has done an invalid read
+   // manifest_normal_normal.txt.geneSampleList is the file
+   // File is in format Gene | Patient ID
    while ( !feof( fp_gene_sample_list ) )
    {
       read = getline( &line, &len, fp_gene_sample_list );
       ret_value = sscanf( line, "%s %d", gene, &sample );
       if (ret_value == 2 )
       {
+         // Only want to count the number of patients so just skip if it's the same one
          if ( sample != last_sample )
          {
             num_samples++;
@@ -171,8 +175,10 @@ int getNumSamplesNormal( FILE *fp_gene_sample_list )
          exit( 1 );
       }
    }
+   // reset file pointer back to the start
    rewind( fp_gene_sample_list );
 
+   // return number of samples we counted
    return( num_samples );
 }
 
@@ -532,24 +538,31 @@ int main(int argc, char ** argv)
    loadGeneSampleMatrixTumor( fp_tumor_matrix, num_genes, num_samples, 
       tumor_matrix, gene_id, tumor_samples_per_gene );
 
+   // finished reading that into the data structures, so no longer need
    fclose( fp_tumor_matrix );
 
    /* load normal gene-sample matrix */
+   // Just gets the number of normal samples as a simple integer
    num_samples_normal = getNumSamplesNormal( fp_normal_matrix );
    printf( "Num normal samples = %d \n", num_samples_normal );
 
+   // Create a similar matrix as tumor_matrix with num_genes x number of patient id samples
    normal_matrix = (int *)malloc( num_genes * num_samples_normal * sizeof( int ) );
    if ( normal_matrix == NULL )
    {
       printf( "ERROR: failed to allocate memory for normal gene_sample_matrix \n" );
      exit( 1 );
    }
+
    normal_samples_per_gene = (int  *)malloc( num_genes * sizeof( int ) );
    if ( normal_samples_per_gene == NULL )
    {
       printf( "ERROR: failed to allocate memory for normal samples per gene \n" );
       exit( 1 );
    }
+   
+   // Pass in file pointer for the normal matrix, pointing at the manifest_normal_normal.txt.geneSampleList file
+   // num_genes was obtained earlier based on the tumor samples processing
    loadGeneSampleMatrixNormal( fp_normal_matrix, num_genes, num_samples_normal, 
       normal_matrix, gene_id, normal_samples_per_gene );
 
