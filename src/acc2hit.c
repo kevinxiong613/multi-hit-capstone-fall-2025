@@ -442,6 +442,9 @@ int main(int argc, char ** argv)
    char    *gene_id;                 /* list of gene ids */
    float   beta;
 
+   // arg1 = training data, BRCA.maf2dat.matrix.out.training
+   // arg2 = normal data, manifest_normal_normal.txt.training.txt.geneSampleList
+   // arg3 = beta val, 0.1
    if (argc != 4)
    {
       printf("ERROR: fComb requires 2 parameters\n");
@@ -450,19 +453,19 @@ int main(int argc, char ** argv)
       printf("       - Beta value (Fbeta-score)\n");
       exit(1);
    }
-
+   // fopen opens file, returns file pointer to read/write with
    if ( ( fp_tumor_matrix = fopen( argv[1], "r" ) ) == NULL )
    {
       printf( "ERROR: unable to open tumor gene-sample count matrix file %s, \n", argv[2] );
       exit( 1 );
    }
-
+   // fopen the normal data too
    if ( ( fp_normal_matrix = fopen( argv[2], "r" ) ) == NULL )
    {
       printf( "ERROR: unable to open normal gene-sample count matrix file %s, \n", argv[3] );
       exit( 1 );
    }
-
+   // atof turns string to float
    beta = atof( argv[3] );
 
    /* load tumor gene-sample matrix */
