@@ -422,6 +422,16 @@ int listCombs( int *tumor_matrix, int num_genes, int num_samples_tumor,
    int *normal_matrix, int num_samples_normal, char *gene_id, 
    int *tumor_samples_per_gene, int *normal_samples_per_gene, float beta )
 {
+      /* Check combinations of genes for coverage of samples */
+   // tumor_matrix[num_gene][num_patient] = number of mutations for this combination
+   // num_genes = total number of genes there are
+   // num_samples_tumor = total number of samples/patients there are
+   // normal_matrix = normal_matrix[num_gene][num_samples_normal] = 1 if found in file, otherwise 0
+   // num_samples_normal = number of normal patients
+   // gene_id array is the list of gene names
+   // tumor_samples_per_gene has the number of patients with a mutation in this gene, for tumor samples
+   // normal_samples_per_gene should do something similar but it's being set to 0? Need to ask about that
+   // beta is 0.1
    int   i, num_found, gene1, gene2, num_excluded, tot_excluded;
    float f_max;
    char *gene1_name, *gene2_name;
@@ -583,7 +593,18 @@ int main(int argc, char ** argv)
    // finished reading into this so done
    fclose( fp_normal_matrix );
 
-/* Check combinations of genes for coverage of samples */
+   /* Check combinations of genes for coverage of samples */
+   // MAIN LOGIC TO FIND IT HERE, EVERYTHING ELSE WAS SETUP!!
+   // Reminder:
+   // tumor_matrix[num_gene][num_patient] = number of mutations for this combination
+   // num_genes = total number of genes there are
+   // num_samples = total number of samples/patients there are
+   // normal_matrix = normal_matrix[num_gene][num_samples_normal] = 1 if found in file, otherwise 0
+   // number of normal patients
+   // gene_id array is the list of gene names
+   // tumor_samples_per_gene has the number of patients with a mutation in this gene, for tumor samples
+   // normal_samples_per_gene should do something similar but it's being set to 0? Need to ask about that
+   // beta is 0.1
    num_comb = listCombs( tumor_matrix, num_genes, num_samples, 
       normal_matrix, num_samples_normal, gene_id, 
       tumor_samples_per_gene, normal_samples_per_gene, beta );
