@@ -46,6 +46,7 @@ void getNumGenesSamplesTumor( FILE *fp_gene_sample_matrix, int *num_genes, int *
    // return value is how many items were succesfully parsed, need 2 here
    if (ret_value == 2 )
    {
+      // store it in the original variables
       *num_genes   = i;
       *num_samples = j;
    }
@@ -477,15 +478,19 @@ int main(int argc, char ** argv)
    beta = atof( argv[3] );
 
    /* load tumor gene-sample matrix */
+   // Gets the number of genes and samples, where genes was the first column and samples was second
    getNumGenesSamplesTumor( fp_tumor_matrix, &num_genes, &num_samples );
    printf( "Num Tumor genes = %d tumor samples = %d \n", num_genes, num_samples );
 
+   // allocate memory for a matrix of [num_genes][num_samples], samples is # of patient IDs
    tumor_matrix = (int  *)malloc( num_genes * num_samples * sizeof( int ) );
    if ( tumor_matrix == NULL )
    {
       printf( "ERROR: failed to allocate memory for tumor gene_sample_matrix \n" );
       exit( 1 );
    }
+
+
    gene_id = (char  *)malloc( num_genes * NAME_LEN * sizeof( char ));
    if ( gene_id == NULL )
    {
