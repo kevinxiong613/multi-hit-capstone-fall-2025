@@ -9,7 +9,7 @@ def countGeneMut(samp_file, comb_file):
 
 #  get number of mut gene
    with open(samp_file, 'r') as samp:
-      # Go through each line in ../data/maf2dat-moderate/manifest_normal_normal.txt.test.txt
+      # Go through each line in ../data/maf2dat-moderate/manifest_normal_normal.txt.test.txt.geneSample
       for line in samp:
          fields = line.split() # space separated
 
@@ -30,7 +30,7 @@ def countGeneMut(samp_file, comb_file):
 
          gene1 = fields[0]
          gene2 = fields[1]
-         # If both genes in the combination are found in the manifest_normal_normal file, increment num_found
+         # If the genes we found in combinations are in normal samples, minimize this value
          if ( (gene1 in genes) and (gene2 in genes) ):
             print(gene1, gene2)
             num_found += 1

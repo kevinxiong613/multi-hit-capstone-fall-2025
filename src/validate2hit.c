@@ -195,7 +195,7 @@ float countCombPerSample( int num_genes, int num_samples,
             if ( ( gene_sample_matrix[g1 * num_samples + j] > 0 ) &&
                  ( gene_sample_matrix[g2 * num_samples + j] > 0 ) )
             {
-               // Increment this
+               // Increment this, shows multiple combinations cover this one sample
                num_comb_per_sample++;
 //               printf("found combination %d in sample %d\n", i, j );
             }
