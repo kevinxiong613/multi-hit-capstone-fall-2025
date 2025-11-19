@@ -34,6 +34,7 @@ void getNumGenesSamples( FILE *fp_gene_sample_matrix, int *num_genes, int *num_s
 
    /* First line contains number of genes and samples */
    read = getline( &line, &len, fp_gene_sample_matrix );
+   // Process the top 2 lines and get the number of genes and number of samples
    ret_value = sscanf( line, "%d %d", &i, &j );
    if (ret_value == 2 )
    {
@@ -70,8 +71,11 @@ void loadGeneSampleMatrix( FILE *fp_gene_sample_matrix, int num_genes,
       ret_value = sscanf( line, "%d %d %d %s %s", &i, &j, &k, gene, sample );
       if (ret_value == 5 )
       {
+         // Set the number of mutations this tumor matrix has
          gene_sample_matrix[i * num_samples + j] = k;
+         // For some reason here we set a terminating character too
          gene[NAME_LEN - 1] = '\0';
+         // Copy this into the gene list based on the ID
          strcpy( gene_list + (i * NAME_LEN), gene );
       }
       else if ( ret_value == EOF || line[0] == '\n' || line[0] == '\0' )
@@ -104,6 +108,7 @@ int getNumComb( FILE *fp_comb )
    ssize_t read;
 
    n = 0;
+   // Reads through BRCA-combinations and sees how many lines there are
    /* Robust read: stop at EOF and tolerate trailing blank lines */
    while ( (read = getline( &line, &len, fp_comb )) != -1 )
    {
@@ -113,7 +118,7 @@ int getNumComb( FILE *fp_comb )
       }
    }
 
-   return( n );
+   return( n - 1 ); /* one extra read before eof detected at*/
 
 }
 
@@ -141,6 +146,7 @@ void loadComb( int num_genes, char *gene_list, int num_comb, FILE *fp_comb, int 
       if ( ret_value == 2 )
       {
          g1 = g2 = -1;
+         // Find the indices that these two genes occur at in the gene_list
          for ( j = 0; j < num_genes; j++ )
          {
             if ( strcmp( gene_list + j * NAME_LEN, gg1 ) == 0 )
@@ -156,6 +162,7 @@ void loadComb( int num_genes, char *gene_list, int num_comb, FILE *fp_comb, int 
                break;
             }
          }
+         // In the combination list, set the indices they occur at in the gene list
          comb_list[i * 2 + 0] = g1;
          comb_list[i * 2 + 1] = g2;
 //         printf("Combination: %d %d %d %s %s %s\n", g1, g2, g3, gg1, gg2, gg3 );
@@ -184,19 +191,24 @@ float countCombPerSample( int num_genes, int num_samples,
    float percent_found;
 
    found = not_found = 0;
+   // Go through each sample
    for ( j = 0; j < num_samples; j++ )
    {
       num_comb_per_sample = 0;
+      // Go through each combination we got for acc2hit
       for ( i = 0; i < num_comb; i++ )
       {
+         // We can get the indices they occur at since we saved that in the comb_list
          g1 = comb_list[i * 2 + 0];
          g2 = comb_list[i * 2 + 1];
 
          if ( ( g1 > -1 ) && ( g2 > -1 ) )
          {
+            // If both are mutated for this sample
             if ( ( gene_sample_matrix[g1 * num_samples + j] > 0 ) &&
                  ( gene_sample_matrix[g2 * num_samples + j] > 0 ) )
             {
+               // Increment this, shows multiple combinations cover this one sample
                num_comb_per_sample++;
 //               printf("found combination %d in sample %d\n", i, j );
             }
@@ -238,13 +250,14 @@ int main(int argc, char ** argv)
       printf("ERROR: geneComb requires 2 parameters - gene-sample count matrix file and combination list\n");
       exit(1);
    }
-
+   // BRCA.maf2dat.matrix.out.test is the file
    if ( ( fp_gene_sample_matrix = fopen( argv[1], "r" ) ) == NULL )
    {
       printf( "ERROR: geneComb cannot open gene-sample count matrix file %s, \n", argv[1] );
       exit( 1 );
    }
 
+   // result/$cancer/$cancer-combinations file
    if ( ( fp_comb = fopen( argv[2], "r" ) ) == NULL )
    {
       printf( "ERROR: geneComb cannot open combination list file %s, \n", argv[1] );
@@ -252,17 +265,21 @@ int main(int argc, char ** argv)
    }
 
    /* read maf2dat file to get number of gene and sample ids */
+   // Again, just reads the top 2 lines
    getNumGenesSamples( fp_gene_sample_matrix, &num_genes, &num_samples );
    printf("Num genes = %d samples = %d \n", num_genes, num_samples);
 
    /* allocate space and load matrix data */
+   // This is the matrix for gene + patient
    gene_sample_matrix = (int  *)malloc( num_genes   * num_samples * sizeof( int ));
+   // This is equivalent to gene_id from acc2hit, stores the name of genes
    gene_list          = (char *)malloc( num_genes   * 20 * sizeof( char ));
    loadGeneSampleMatrix( fp_gene_sample_matrix, num_genes, num_samples, 
       gene_sample_matrix, gene_list );
    fclose( fp_gene_sample_matrix );
 
    /* get number of combinations */
+   // Reads through BRCA-combinations and sees how many lines there are
    num_comb = getNumComb( fp_comb );
    printf("Num combinations = %d\n", num_comb);
 
@@ -272,6 +289,7 @@ int main(int argc, char ** argv)
    loadComb( num_genes, gene_list, num_comb, fp_comb, comb_list );
    fclose( fp_comb );
 
+   // comb_list holds [[index of g1 in gene_list, index of g2 in gene_list], etc...]
    percent_found = countCombPerSample( num_genes, num_samples, gene_sample_matrix, 
       num_comb, comb_list );
    printf( "Percent found %f \n", percent_found );
