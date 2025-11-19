@@ -104,10 +104,10 @@ void loadGeneSampleMatrixTumor( FILE *fp_gene_sample_matrix, int num_genes,
 
    // feof only reports that we ALREADY FAILED to read something
    /* Robust read: stop at EOF and tolerate trailing blank lines */
+   // get an entire line from the file pointer, fp_gene_sample_matrix, again, and len is updated too
    while ( (read = getline( &line, &len, fp_gene_sample_matrix )) != -1 )
    {
-      // get an entire line from the file pointer, fp_gene_sample_matrix, again, and len is updated too
-      read = getline( &line, &len, fp_gene_sample_matrix );
+      
       // Read the lines values into i, j, k as integers, and gene, sample as strings
       // i = gene identification
       // j = patient id
@@ -124,11 +124,6 @@ void loadGeneSampleMatrixTumor( FILE *fp_gene_sample_matrix, int num_genes,
             // there was a mutation for this gene, increment
             tumor_samples_per_gene[i]++;
          }
-      }
-      else if ( ret_value == EOF || line[0] == '\n' || line[0] == '\0' )
-      {
-         /* ignore empty trailing lines */
-         continue;
       }
       else
       {
@@ -174,11 +169,6 @@ int getNumSamplesNormal( FILE *fp_gene_sample_list )
             num_samples++;
             last_sample = sample;
          }
-      }
-      else if ( ret_value == EOF || line[0] == '\n' || line[0] == '\0' )
-      {
-         /* ignore empty trailing lines */
-         continue;
       }
       else
       {
@@ -270,15 +260,10 @@ void loadGeneSampleMatrixNormal( FILE *fp_gene_sample_list, int num_genes,
             {
                // in the matrix, for this gene (row), and the patient, set to 1
                normal_matrix[n * num_samples_normal + matrix_sample_index] = 1;
-               normal_samples_per_gene[n]++;
+               normal_samples_per_gene = 0;
                break;
             }
          }
-      }
-      else if ( ret_value == EOF || line[0] == '\n' || line[0] == '\0' )
-      {
-         /* ignore empty trailing lines */
-         continue;
       }
       else
       {
@@ -620,7 +605,7 @@ int main(int argc, char ** argv)
       printf( "ERROR: failed to allocate memory for normal samples per gene \n" );
       exit( 1 );
    }
-   
+
    // Pass in file pointer for the normal matrix, pointing at the manifest_normal_normal.txt.geneSampleList file
    // num_genes was obtained earlier based on the tumor samples processing
    loadGeneSampleMatrixNormal( fp_normal_matrix, num_genes, num_samples_normal, 
