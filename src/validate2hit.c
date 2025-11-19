@@ -64,15 +64,20 @@ void loadGeneSampleMatrix( FILE *fp_gene_sample_matrix, int num_genes,
    ssize_t read;
 
 
-   while ( !feof( fp_gene_sample_matrix ) )
+   /* Robust read: stop at EOF and tolerate trailing blank lines */
+   while ( (read = getline( &line, &len, fp_gene_sample_matrix )) != -1 )
    {
-      read = getline( &line, &len, fp_gene_sample_matrix );
       ret_value = sscanf( line, "%d %d %d %s %s", &i, &j, &k, gene, sample );
       if (ret_value == 5 )
       {
          gene_sample_matrix[i * num_samples + j] = k;
          gene[NAME_LEN - 1] = '\0';
          strcpy( gene_list + (i * NAME_LEN), gene );
+      }
+      else if ( ret_value == EOF || line[0] == '\n' || line[0] == '\0' )
+      {
+         /* ignore empty trailing lines */
+         continue;
       }
       else
       {
@@ -99,13 +104,16 @@ int getNumComb( FILE *fp_comb )
    ssize_t read;
 
    n = 0;
-   while ( !feof( fp_comb ) )
+   /* Robust read: stop at EOF and tolerate trailing blank lines */
+   while ( (read = getline( &line, &len, fp_comb )) != -1 )
    {
-      read = getline( &line, &len, fp_comb );
-      n++;
+      if ( read > 0 )
+      {
+         n++;
+      }
    }
 
-   return( n - 1 ); /* one extra read before eof detected */
+   return( n );
 
 }
 
@@ -151,6 +159,11 @@ void loadComb( int num_genes, char *gene_list, int num_comb, FILE *fp_comb, int 
          comb_list[i * 2 + 0] = g1;
          comb_list[i * 2 + 1] = g2;
 //         printf("Combination: %d %d %d %s %s %s\n", g1, g2, g3, gg1, gg2, gg3 );
+      }
+      else if ( ret_value == EOF || line[0] == '\n' || line[0] == '\0' )
+      {
+         /* ignore empty trailing lines */
+         continue;
       }
       else
       {
@@ -269,4 +282,3 @@ int main(int argc, char ** argv)
 
    return( 0 );
 }
-

@@ -80,9 +80,9 @@ void loadGeneSampleMatrixTumor( FILE *fp_gene_sample_matrix, int num_genes,
       }
    }
 
-   while ( !feof( fp_gene_sample_matrix ) )
+   /* Robust read: stop at EOF and tolerate trailing blank lines */
+   while ( (read = getline( &line, &len, fp_gene_sample_matrix )) != -1 )
    {
-      read = getline( &line, &len, fp_gene_sample_matrix );
       ret_value = sscanf( line, "%d %d %d %s %s", &i, &j, &k, gene, sample );
       if ( ret_value == 5 )
       {
@@ -92,6 +92,11 @@ void loadGeneSampleMatrixTumor( FILE *fp_gene_sample_matrix, int num_genes,
          {
             tumor_samples_per_gene[i]++;
          }
+      }
+      else if ( ret_value == EOF || line[0] == '\n' || line[0] == '\0' )
+      {
+         /* ignore empty trailing lines */
+         continue;
       }
       else
       {
@@ -122,9 +127,9 @@ int getNumSamplesNormal( FILE *fp_gene_sample_list )
    num_samples = last_sample = 0;
 
    /* read to end of file */
-   while ( !feof( fp_gene_sample_list ) )
+   /* Robust read: stop at EOF and tolerate trailing blank lines */
+   while ( (read = getline( &line, &len, fp_gene_sample_list )) != -1 )
    {
-      read = getline( &line, &len, fp_gene_sample_list );
       ret_value = sscanf( line, "%s %d", gene, &sample );
       if (ret_value == 2 )
       {
@@ -133,6 +138,11 @@ int getNumSamplesNormal( FILE *fp_gene_sample_list )
             num_samples++;
             last_sample = sample;
          }
+      }
+      else if ( ret_value == EOF || line[0] == '\n' || line[0] == '\0' )
+      {
+         /* ignore empty trailing lines */
+         continue;
       }
       else
       {
@@ -190,9 +200,9 @@ void loadGeneSampleMatrixNormal( FILE *fp_gene_sample_list, int num_genes,
    }
 
    new_sample_id = 0;
-   while ( !feof( fp_gene_sample_list ) )
+   /* Robust read: stop at EOF and tolerate trailing blank lines */
+   while ( (read = getline( &line, &len, fp_gene_sample_list )) != -1 )
    {
-      read = getline( &line, &len, fp_gene_sample_list );
       ret_value = sscanf( line, "%s %d", gene, &sample );
       if ( ret_value == 2 )
       {
@@ -211,10 +221,15 @@ void loadGeneSampleMatrixNormal( FILE *fp_gene_sample_list, int num_genes,
             if ( strcmp( gene_id+(n*NAME_LEN), gene ) == 0 )
             {
                normal_matrix[n * num_samples_normal + matrix_sample_index] = 1;
-               normal_samples_per_gene = 0;
+               normal_samples_per_gene[n]++;
                break;
             }
          }
+      }
+      else if ( ret_value == EOF || line[0] == '\n' || line[0] == '\0' )
+      {
+         /* ignore empty trailing lines */
+         continue;
       }
       else
       {
@@ -453,13 +468,13 @@ int main(int argc, char ** argv)
 
    if ( ( fp_tumor_matrix = fopen( argv[1], "r" ) ) == NULL )
    {
-      printf( "ERROR: unable to open tumor gene-sample count matrix file %s, \n", argv[2] );
+      printf( "ERROR: unable to open tumor gene-sample count matrix file %s, \n", argv[1] );
       exit( 1 );
    }
 
    if ( ( fp_normal_matrix = fopen( argv[2], "r" ) ) == NULL )
    {
-      printf( "ERROR: unable to open normal gene-sample count matrix file %s, \n", argv[3] );
+      printf( "ERROR: unable to open normal gene-sample count matrix file %s, \n", argv[2] );
       exit( 1 );
    }
 
@@ -527,4 +542,3 @@ int main(int argc, char ** argv)
 
    return( 0 );
 }
-
