@@ -103,7 +103,8 @@ void loadGeneSampleMatrixTumor( FILE *fp_gene_sample_matrix, int num_genes,
    // feof will still return False, and getline will now read and return -1,
 
    // feof only reports that we ALREADY FAILED to read something
-   while ( !feof( fp_gene_sample_matrix ) )
+   /* Robust read: stop at EOF and tolerate trailing blank lines */
+   while ( (read = getline( &line, &len, fp_gene_sample_matrix )) != -1 )
    {
       // get an entire line from the file pointer, fp_gene_sample_matrix, again, and len is updated too
       read = getline( &line, &len, fp_gene_sample_matrix );
@@ -123,6 +124,11 @@ void loadGeneSampleMatrixTumor( FILE *fp_gene_sample_matrix, int num_genes,
             // there was a mutation for this gene, increment
             tumor_samples_per_gene[i]++;
          }
+      }
+      else if ( ret_value == EOF || line[0] == '\n' || line[0] == '\0' )
+      {
+         /* ignore empty trailing lines */
+         continue;
       }
       else
       {
@@ -156,9 +162,9 @@ int getNumSamplesNormal( FILE *fp_gene_sample_list )
    // Again, error with the feof only returning True AFTER getline has done an invalid read
    // manifest_normal_normal.txt.geneSampleList is the file
    // File is in format Gene | Patient ID
-   while ( !feof( fp_gene_sample_list ) )
+   /* Robust read: stop at EOF and tolerate trailing blank lines */
+   while ( (read = getline( &line, &len, fp_gene_sample_list )) != -1 )
    {
-      read = getline( &line, &len, fp_gene_sample_list );
       ret_value = sscanf( line, "%s %d", gene, &sample );
       if (ret_value == 2 )
       {
@@ -168,6 +174,11 @@ int getNumSamplesNormal( FILE *fp_gene_sample_list )
             num_samples++;
             last_sample = sample;
          }
+      }
+      else if ( ret_value == EOF || line[0] == '\n' || line[0] == '\0' )
+      {
+         /* ignore empty trailing lines */
+         continue;
       }
       else
       {
@@ -232,9 +243,9 @@ void loadGeneSampleMatrixNormal( FILE *fp_gene_sample_list, int num_genes,
 
    new_sample_id = 0;
    // again, shouldn't use this paradigm for while loop
-   while ( !feof( fp_gene_sample_list ) )
+   /* Robust read: stop at EOF and tolerate trailing blank lines */
+   while ( (read = getline( &line, &len, fp_gene_sample_list )) != -1 )
    {
-      read = getline( &line, &len, fp_gene_sample_list );
       // Get the gene name, and patient ID, this is mutated
       ret_value = sscanf( line, "%s %d", gene, &sample );
       if ( ret_value == 2 )
@@ -259,11 +270,15 @@ void loadGeneSampleMatrixNormal( FILE *fp_gene_sample_list, int num_genes,
             {
                // in the matrix, for this gene (row), and the patient, set to 1
                normal_matrix[n * num_samples_normal + matrix_sample_index] = 1;
-               // WHY IS THIS DOING THIS??? WHAT
-               normal_samples_per_gene = 0;
+               normal_samples_per_gene[n]++;
                break;
             }
          }
+      }
+      else if ( ret_value == EOF || line[0] == '\n' || line[0] == '\0' )
+      {
+         /* ignore empty trailing lines */
+         continue;
       }
       else
       {
@@ -536,13 +551,13 @@ int main(int argc, char ** argv)
    // fopen opens file, returns file pointer to read/write with
    if ( ( fp_tumor_matrix = fopen( argv[1], "r" ) ) == NULL )
    {
-      printf( "ERROR: unable to open tumor gene-sample count matrix file %s, \n", argv[2] );
+      printf( "ERROR: unable to open tumor gene-sample count matrix file %s, \n", argv[1] );
       exit( 1 );
    }
    // fopen the normal data too
    if ( ( fp_normal_matrix = fopen( argv[2], "r" ) ) == NULL )
    {
-      printf( "ERROR: unable to open normal gene-sample count matrix file %s, \n", argv[3] );
+      printf( "ERROR: unable to open normal gene-sample count matrix file %s, \n", argv[2] );
       exit( 1 );
    }
    // atof turns string to float
@@ -642,4 +657,3 @@ int main(int argc, char ** argv)
 
    return( 0 );
 }
-
