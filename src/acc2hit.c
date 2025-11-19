@@ -300,18 +300,22 @@ float maxF( int *tumor_matrix, int num_genes, int num_samples_tumor,
 
    beta2 = beta * beta;
 
-   f_max = 0.0;
+   f_max = 0.0; // best score thus far
    num_skipped = 0;
+   // Go through each gene combination
    for ( i1 = 0; i1 < num_genes; i1++ )
    {
       for ( i2 = i1+1; i2 < num_genes; i2++ )
       {
+         // temp_tp is the minimum of the 2 genes tumor counts
+         // upper bound on the maximum number of genes that have BOTH of these mutated
          temp_tp = tumor_samples_per_gene[i1];
 //         temp_fp = normal_samples_per_gene[i1];
          if ( tumor_samples_per_gene[i2] < temp_tp )
          {
             temp_tp = tumor_samples_per_gene[i2];
          }
+         
 //         if ( normal_samples_per_gene[i2] < temp_fp )
 //         {
 //            temp_fp = normal_samples_per_gene[i2];
@@ -320,12 +324,18 @@ float maxF( int *tumor_matrix, int num_genes, int num_samples_tumor,
 //         recall_bound = (float) (temp_tp) / (float) num_samples_tumor;
 //         f_bound = 2.0 * prec_bound * recall_bound / (prec_bound + recall_bound);
 //         f_bound = (1.0 + beta2) * prec_bound * recall_bound / (beta2 * prec_bound + recall_bound);
+
+         // Calculate the max score we can get with temp_tp
+         // temp_tp is upper bound on true_pos, num_samples_normal is upper bound on true_neg
          f_bound = (float)(beta * (float) temp_tp + (float) num_samples_normal) / (float)(num_samples_tumor + num_samples_normal);
+
+         // only process if it can beat the best we've seen before
          if ( f_bound > f_max )
          {
             true_pos = 0;
             for ( j = 0; j < num_samples_tumor; j++ )
             {
+               // if this sample isn't excluded AND both genes i1 and i2 are mutated, increment true_pos
                if ( excluded_samples[j] == 0 )
                {
                   if ( ( tumor_matrix[i1 * num_samples_tumor + j] > 0 ) &&
@@ -336,6 +346,7 @@ float maxF( int *tumor_matrix, int num_genes, int num_samples_tumor,
                }
             }
             false_pos = 0;
+            // false positive counts the number of times both genes are mutated in normal samples
             for ( j = 0; j < num_samples_normal; j++ )
             {
                if ( ( normal_matrix[i1 * num_samples_normal + j] > 0 ) &&
@@ -352,10 +363,12 @@ float maxF( int *tumor_matrix, int num_genes, int num_samples_tumor,
 //               recall    = (float) true_pos / (float) num_samples_tumor;
 //               f         = 2.0 * prec * recall / (prec + recall );
 //               f         = (1.0 + beta2) * prec * recall / (beta2 * prec + recall );
+               // number of times both genes mutated in tumor + (normal samples - both mutated in normal) / (all genes together)
                f         = (float)(beta * (float) true_pos + (float) true_neg) / (float)(num_samples_tumor + num_samples_normal);
                if ( f > f_max )
                {
                   f_max  = f;
+                  // set these genes for the listCombs function to use, it's the current best
                   *gene1 = i1;
                   *gene2 = i2;
                }
@@ -365,6 +378,7 @@ float maxF( int *tumor_matrix, int num_genes, int num_samples_tumor,
 //               printf( "True neg = %d - %d = 0", num_samples_normal, false_pos );
 //            }
          }
+         // otherwise just skip it
          else
          {
             num_skipped++;
@@ -374,6 +388,7 @@ float maxF( int *tumor_matrix, int num_genes, int num_samples_tumor,
 
 //   printf( "num skipped = %d \n", num_skipped );
 
+   // return the best f_max score acheived
    return( f_max );
 }
 
@@ -390,6 +405,7 @@ int excludeSamples( int gene1, int gene2,  int *excluded_samples, int *tumor_mat
 {
    int   s, num_excluded;
 
+   // Exclude samples if they contain BOTH gene1 and gene2
    num_excluded = 0;
    for ( s = 0; s < num_samples_tumor; s++ )
    {
@@ -445,6 +461,7 @@ int listCombs( int *tumor_matrix, int num_genes, int num_samples_tumor,
       printf( "ERROR: failed to allocate memory for excluded_samples \n" );
       exit( 1 );
    }
+   // initialize this i guess
    for ( i = 0; i < num_samples_tumor; i++ )
    {
       excluded_samples[i] = 0;
@@ -452,16 +469,20 @@ int listCombs( int *tumor_matrix, int num_genes, int num_samples_tumor,
 
    num_found    = 0;
    tot_excluded = 0;
+   // keep going until each has been excluded
    while ( tot_excluded < num_samples_tumor )
    {
+      // Calculate the highest f_max score acheived by any 2 combinations of genes and set gene1,gene2 to be that combination
       f_max = maxF( tumor_matrix, num_genes, num_samples_tumor, normal_matrix, 
                     num_samples_normal, tumor_samples_per_gene, normal_samples_per_gene, 
                     excluded_samples, &gene1, &gene2, beta );
 
+      // Exclude samples that include both gene1 and gene2, which affects future f_max calculations
       num_excluded = excludeSamples( gene1, gene2, excluded_samples, tumor_matrix, num_samples_tumor );
       tot_excluded += num_excluded;
       num_found++;
 
+      // Copy the actual genen names into gene1_name and gene2_name
       strcpy( gene1_name, gene_id+(gene1*NAME_LEN) );
       strcpy( gene2_name, gene_id+(gene2*NAME_LEN) );
       printf( "%s %s %d %d F-max = %9.6f , num excluded %d, tot excluded %d \n", 
@@ -473,7 +494,7 @@ int listCombs( int *tumor_matrix, int num_genes, int num_samples_tumor,
       }
    }
 
-
+   // The number of combinations found to "explain" each pair
    return( num_found );
 }
 
@@ -608,8 +629,11 @@ int main(int argc, char ** argv)
    num_comb = listCombs( tumor_matrix, num_genes, num_samples, 
       normal_matrix, num_samples_normal, gene_id, 
       tumor_samples_per_gene, normal_samples_per_gene, beta );
+   
+   // Print the number of 2 hit combinations at the end
    printf( "Num 2-hit combinations = %d  (beta = %f )\n", num_comb, beta );
 
+   // Free all memory
    free( tumor_matrix );
    free( normal_matrix );
    free( gene_id );
