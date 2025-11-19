@@ -9,3 +9,8 @@ result/ACC2HIT/BRCA/BRCA-combinations
 2 gene combo | F-max score | IDK
 - Combinations output: 2-gene combo | F-max score | Additional metrics
 
+So the validate2hit.sh script (which you're correct, it's not in the repo) simply runs both of the following:
+    -  ./validate2hit ../data/maf2dat-moderate/BRCA.maf2dat.matrix.out.test ../result/BRCA/BRCA-combinations     
+python validateNormal2hit.py ../data/maf2dat-moderate/manifest_normal_normal.txt.test.txt.geneSampleList ../result/BRCA/BRCA-combinations 
+The output tells you how many combinations were in the test set as well as the coverage percentage
+You want to maximize the percentage for the tumor matrix and minimize it for the nomal samples.
