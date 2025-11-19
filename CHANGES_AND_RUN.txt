@@ -1,0 +1,22 @@
+Changes
+- acc2hit.c: make file reads EOF-safe and ignore trailing blanks when loading tumor/normal matrices.
+- validate2hit.c: same EOF-safe reading for validation inputs/combinations.
+- compute-multihit-combinations.sh: point to manifest_normal_normal.txt.training.txt.geneSampleList and add note about the input choice.
+
+Why trailing-line handling?
+- Some inputs end with a blank line; the previous loops treated that as malformed and aborted. Skipping trailing blanks keeps strict parsing on real data while avoiding spurious failures at EOF.
+
+Why use the geneSampleList?
+- The geneSampleList file already maps genes to normal samples; the BAM manifest alone lacks this mapping. Using the geneSampleList ensures normals are aligned correctly to the matrix before computing combinations.
+- `acc2hit` needs that normal gene–sample matrix to count how often each gene pair appears in normals (false positives/true negatives) versus tumors, so it can compute the F‑measure and filter out pairs common in normals.
+
+How this differs from the older script
+- Uses `mkdir -p` so reruns don’t fail if the result directory exists.
+- Runs `validate2hit` directly with the matrix + generated combos (no validate2hit.sh wrapper); inputs are the same maf2dat matrix and geneSampleList, but parsing is now EOF-safe/blank-line tolerant to avoid spurious errors.
+
+How to run (example BRCA)
+1) cd src
+2) make
+3) ./compute-multihit-combinations.sh BRCA
+   - Output: result/BRCA/BRCA-combinations
+   - Runtime: ~3–4 minutes
