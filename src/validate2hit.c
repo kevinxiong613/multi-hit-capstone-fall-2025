@@ -118,7 +118,9 @@ int getNumComb( FILE *fp_comb )
       }
    }
 
-   return( n - 1 ); /* one extra read before eof detected at*/
+   // 2 additional lines at the start of the file which give info about number of samples and genes
+   return( n - 3 ); /* one extra read before eof detected at*/
+   
 
 }
 
