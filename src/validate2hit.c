@@ -113,8 +113,9 @@ int getNumComb( FILE *fp_comb )
       }
    }
 
-   // First 2 lines are just giving info about num samples and num genes
-   return( n - 3 ); /* one extra read before eof detected at*/
+   // First 2 lines are just giving info about num samples and num genes, but we do - 1 instead of - 3 because
+   // otherwise we'll combinations in loadComb
+   return( n - 1 ); /* one extra read before eof detected at*/
 
 }
 
@@ -137,7 +138,7 @@ void loadComb( int num_genes, char *gene_list, int num_comb, FILE *fp_comb, int 
    /* read data lines */
    for ( i = 0; i < num_comb; i++ )
    {
-      read = getline( &line, &len, fp_comb );
+      read = getline( &line, &len, fp_comb );;
       ret_value = sscanf( line, "%s %s", gg1, gg2 );
       if ( ret_value == 2 )
       {
