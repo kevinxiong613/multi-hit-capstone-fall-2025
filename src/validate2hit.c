@@ -138,7 +138,7 @@ void loadComb( int num_genes, char *gene_list, int num_comb, FILE *fp_comb, int 
    /* read data lines */
    for ( i = 0; i < num_comb; i++ )
    {
-      read = getline( &line, &len, fp_comb );;
+      read = getline( &line, &len, fp_comb );
       if (i < 2) {
          continue;
       }
