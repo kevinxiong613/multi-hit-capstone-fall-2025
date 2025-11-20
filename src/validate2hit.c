@@ -139,6 +139,9 @@ void loadComb( int num_genes, char *gene_list, int num_comb, FILE *fp_comb, int 
    for ( i = 0; i < num_comb; i++ )
    {
       read = getline( &line, &len, fp_comb );;
+      if (i < 2) {
+         continue;
+      }
       ret_value = sscanf( line, "%s %s", gg1, gg2 );
       if ( ret_value == 2 )
       {
