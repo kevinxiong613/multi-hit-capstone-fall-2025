@@ -187,6 +187,8 @@ float countCombPerSample( int num_genes, int num_samples,
 
    found = not_found = 0;
    // Go through each sample
+   //parallelize this loop
+   #pragma omp parallel for private(i, g1, g2, num_comb_per_sample)
    for ( j = 0; j < num_samples; j++ )
    {
       num_comb_per_sample = 0;
