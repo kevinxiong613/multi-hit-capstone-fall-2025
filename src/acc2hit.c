@@ -18,6 +18,9 @@
 #include <ctype.h>
 #include <sys/time.h>
 #include <sys/resource.h>
+#include <omp.h>
+
+
 
 static const int NAME_LEN = 20;
 
@@ -88,6 +91,8 @@ void loadGeneSampleMatrixTumor( FILE *fp_gene_sample_matrix, int num_genes,
    gene_id = (char  *)malloc( num_genes * NAME_LEN * sizeof( char ));
    tumor_samples_per_gene = (int  *)malloc( num_genes * sizeof( int ) ); --> These were the initializations
    */
+
+   #pragma omp parallel for private(j)
    for ( n = 0; n < num_genes; n++ )
    {
       tumor_samples_per_gene[n] = 0; // set these all to 0
@@ -222,6 +227,9 @@ void loadGeneSampleMatrixNormal( FILE *fp_gene_sample_list, int num_genes,
 
    /* initialize matrix */
    // Same as initialization for loadTumor
+
+
+   #pragma omp parallel for private(j)
    for ( n = 0; n < num_genes; n++ )
    {
       normal_samples_per_gene[n] = 0;
@@ -300,93 +308,109 @@ float maxF( int *tumor_matrix, int num_genes, int num_samples_tumor,
 
    beta2 = beta * beta;
 
-   f_max = 0.0; // best score thus far
+   f_max = 0.0f; // global best score
    num_skipped = 0;
-   // Go through each gene combination
-   for ( i1 = 0; i1 < num_genes; i1++ )
+   int best_g1 = -1;
+   int best_g2 = -1;
+
+   /* Parallelize search over gene pairs */
+   #pragma omp parallel private(i1,i2,j,true_pos,false_pos,true_neg,false_neg, \
+                                ratio,total_ratio,adj_tumor_count,adj_normal_count, \
+                                f,f_bound,prec,recall,prec_bound,recall_bound, \
+                                temp_tp,temp_fp) 
    {
-      for ( i2 = i1+1; i2 < num_genes; i2++ )
+      float local_f_max = 0.0f;   // thread-local best score
+      int   local_g1    = -1;     // thread-local best gene1
+      int   local_g2    = -1;     // thread-local best gene2
+      int   local_skipped = 0;
+
+      #pragma omp for nowait
+      for ( i1 = 0; i1 < num_genes; i1++ )
       {
-         // temp_tp is the minimum of the 2 genes tumor counts
-         // upper bound on the maximum number of genes that have BOTH of these mutated
-         temp_tp = tumor_samples_per_gene[i1];
-//         temp_fp = normal_samples_per_gene[i1];
-         if ( tumor_samples_per_gene[i2] < temp_tp )
+         for ( i2 = i1+1; i2 < num_genes; i2++ )
          {
-            temp_tp = tumor_samples_per_gene[i2];
-         }
-         
-//         if ( normal_samples_per_gene[i2] < temp_fp )
-//         {
-//            temp_fp = normal_samples_per_gene[i2];
-//         }
-//         prec_bound   = (float) (temp_tp) / (float) (temp_tp + temp_fp);
-//         recall_bound = (float) (temp_tp) / (float) num_samples_tumor;
-//         f_bound = 2.0 * prec_bound * recall_bound / (prec_bound + recall_bound);
-//         f_bound = (1.0 + beta2) * prec_bound * recall_bound / (beta2 * prec_bound + recall_bound);
-
-         // Calculate the max score we can get with temp_tp
-         // temp_tp is upper bound on true_pos, num_samples_normal is upper bound on true_neg
-         f_bound = (float)(beta * (float) temp_tp + (float) num_samples_normal) / (float)(num_samples_tumor + num_samples_normal);
-
-         // only process if it can beat the best we've seen before
-         if ( f_bound > f_max )
-         {
-            true_pos = 0;
-            for ( j = 0; j < num_samples_tumor; j++ )
+            // temp_tp is the minimum of the 2 genes tumor counts
+            // upper bound on the maximum number of genes that have BOTH of these mutated
+            temp_tp = tumor_samples_per_gene[i1];
+            if ( tumor_samples_per_gene[i2] < temp_tp )
             {
-               // if this sample isn't excluded AND both genes i1 and i2 are mutated, increment true_pos
-               if ( excluded_samples[j] == 0 )
+               temp_tp = tumor_samples_per_gene[i2];
+            }
+
+            // Calculate the max score we can get with temp_tp
+            // temp_tp is upper bound on true_pos, num_samples_normal is upper bound on true_neg
+            f_bound = (float)(beta * (float) temp_tp + (float) num_samples_normal) /
+                      (float)(num_samples_tumor + num_samples_normal);
+
+            // only process if it can beat this thread's best so far
+            if ( f_bound > local_f_max )
+            {
+               true_pos = 0;
+               for ( j = 0; j < num_samples_tumor; j++ )
                {
-                  if ( ( tumor_matrix[i1 * num_samples_tumor + j] > 0 ) &&
-                       ( tumor_matrix[i2 * num_samples_tumor + j] > 0 ) )
+                  // if this sample isn't excluded AND both genes i1 and i2 are mutated, increment true_pos
+                  if ( excluded_samples[j] == 0 )
                   {
-                     true_pos++;
+                     if ( ( tumor_matrix[i1 * num_samples_tumor + j] > 0 ) &&
+                          ( tumor_matrix[i2 * num_samples_tumor + j] > 0 ) )
+                     {
+                        true_pos++;
+                     }
+                  }
+               }
+
+               false_pos = 0;
+               // false positive counts the number of times both genes are mutated in normal samples
+               for ( j = 0; j < num_samples_normal; j++ )
+               {
+                  if ( ( normal_matrix[i1 * num_samples_normal + j] > 0 ) &&
+                       ( normal_matrix[i2 * num_samples_normal + j] > 0 ) )
+                  {
+                     false_pos++;
+                  }
+               }
+
+               if ( true_pos > 0 ) /* avoid divide by zero */
+               {
+                  false_neg = num_samples_tumor  - true_pos;
+                  true_neg  = num_samples_normal - false_pos;
+
+                  // number of times both genes mutated in tumor + (normal samples - both mutated in normal) / (all genes together)
+                  f = (float)(beta * (float) true_pos + (float) true_neg) /
+                      (float)(num_samples_tumor + num_samples_normal);
+
+                  if ( f > local_f_max )
+                  {
+                     local_f_max = f;
+                     local_g1    = i1;
+                     local_g2    = i2;
                   }
                }
             }
-            false_pos = 0;
-            // false positive counts the number of times both genes are mutated in normal samples
-            for ( j = 0; j < num_samples_normal; j++ )
+            else
             {
-               if ( ( normal_matrix[i1 * num_samples_normal + j] > 0 ) &&
-                    ( normal_matrix[i2 * num_samples_normal + j] > 0 ) )
-               {
-                  false_pos++;
-               }
+               local_skipped++;
             }
-            if ( true_pos > 0 ) /* avoid divide by zero */
-            {
-               false_neg = num_samples_tumor  - true_pos;
-               true_neg  = num_samples_normal - false_pos; 
-//               prec      = (float) true_pos / (float) (true_pos + false_pos);
-//               recall    = (float) true_pos / (float) num_samples_tumor;
-//               f         = 2.0 * prec * recall / (prec + recall );
-//               f         = (1.0 + beta2) * prec * recall / (beta2 * prec + recall );
-               // number of times both genes mutated in tumor + (normal samples - both mutated in normal) / (all genes together)
-               f         = (float)(beta * (float) true_pos + (float) true_neg) / (float)(num_samples_tumor + num_samples_normal);
-               if ( f > f_max )
-               {
-                  f_max  = f;
-                  // set these genes for the listCombs function to use, it's the current best
-                  *gene1 = i1;
-                  *gene2 = i2;
-               }
-            }
-//            else
-//            {
-//               printf( "True neg = %d - %d = 0", num_samples_normal, false_pos );
-//            }
          }
-         // otherwise just skip it
-         else
+      }
+
+      // Reduce per-thread bests into global best
+      #pragma omp critical
+      {
+         if ( local_f_max > f_max )
          {
-            num_skipped++;
+            f_max   = local_f_max;
+            best_g1 = local_g1;
+            best_g2 = local_g2;
          }
+         num_skipped += local_skipped;
       }
    }
 
 //   printf( "num skipped = %d \n", num_skipped );
+
+   *gene1 = best_g1;
+   *gene2 = best_g2;
 
    // return the best f_max score acheived
    return( f_max );
@@ -401,12 +425,16 @@ float maxF( int *tumor_matrix, int num_genes, int num_samples_tumor,
  *                     number of samples
  * 
  ************************************************************************/
+
+
 int excludeSamples( int gene1, int gene2,  int *excluded_samples, int *tumor_matrix, int num_samples_tumor ) 
 {
    int   s, num_excluded;
 
    // Exclude samples if they contain BOTH gene1 and gene2
    num_excluded = 0;
+
+   #pragma omp parallel for reduction(+:num_excluded)
    for ( s = 0; s < num_samples_tumor; s++ )
    {
       if ( excluded_samples[s] == 0 )
@@ -511,6 +539,7 @@ int listCombs( int *tumor_matrix, int num_genes, int num_samples_tumor,
  *****************************************************************************************/
 int main(int argc, char ** argv)
 {
+   omp_set_num_threads(16);
    int     num_genes, num_samples, num_samples_normal;   /* number of genes and samples in tcga maf data */
    int     num_comb;                 /* number of 3-hit combinations found in tcga samples */
    int     *tumor_matrix;            /* matrix of genesxsamples */
