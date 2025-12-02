@@ -1,7 +1,6 @@
 CC = gcc-15
 
 CFLAGS  = -Wall -O2 -fopenmp
-LDFLAGS = -L/opt/homebrew/opt/libomp/lib
 LDLIBS  = 
 OBJECTS = acc2hit.o validate2hit.o
 
