@@ -313,7 +313,7 @@
       float f_bound;
       local_i1 = 0;
       local_i2 = 0;
-      #pragma omp for
+      #pragma omp for collapse(2)
       for ( i1 = 0; i1 < num_genes; i1++ )
       {
          for ( i2 = i1+1; i2 < num_genes; i2++ )
