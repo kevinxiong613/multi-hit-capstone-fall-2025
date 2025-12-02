@@ -16,5 +16,5 @@ python3 validateNormal2hit.py ../data/maf2dat-moderate/manifest_normal_normal.tx
 fi
 # Uses the geneSampleList input (not the BAM manifest) to align normals correctly!
 
-# end=$(date +%s)
-# echo "Total runtime: $((end - start)) seconds"
+end=$(date +%s)
+echo "Total runtime: $((end - start)) seconds"
