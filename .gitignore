@@ -3,4 +3,5 @@ acc2hit
 acc2hit.o
 validate2hit
 validate2hit.o
-result
+acc2hitSerial
+acc2hitSerial.o
