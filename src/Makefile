@@ -1,25 +1,38 @@
-CC = gcc-15
+CC = clang
 
-CFLAGS  = -Wall -O2 -fopenmp
-LDLIBS  = 
-OBJECTS = acc2hit.o validate2hit.o
+# Compiler flags with optimizations
+CFLAGS  = -Wall -Wextra -O3 -march=native -flto -Xpreprocessor -fopenmp -I/opt/homebrew/opt/libomp/include
+LDFLAGS = -L/opt/homebrew/opt/libomp/lib -flto
+LDLIBS  = -lomp
+
+# All object files
+OBJECTS = acc2hit.o validate2hit.o acc2hitSerial.o
+
+# Default target
+.PHONY: all clean
 
 all: acc2hit validate2hit acc2hitSerial
 
-acc2hit.o: acc2hit.c
+# Pattern rule for object files
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
 
-validate2hit.o: validate2hit.c
-
-acc2hitSerial.o: acc2hitSerial.c
-
+# Executables
 acc2hit: acc2hit.o
-	$(CC) -o acc2hit $(CFLAGS) $(LDLIBS) acc2hit.o $(LDLIBS)
+	$(CC) -o $@ $(LDFLAGS) $^ $(LDLIBS)
 
 validate2hit: validate2hit.o
-	$(CC) -o validate2hit $(CFLAGS) $(LDLIBS) validate2hit.o $(LDLIBS)
+	$(CC) -o $@ $(LDFLAGS) $^ $(LDLIBS)
 
 acc2hitSerial: acc2hitSerial.o
-	$(CC) -o acc2hitSerial $(CFLAGS) $(LDLIBS) acc2hitSerial.o $(LDLIBS)
+	$(CC) -o $@ $(LDFLAGS) $^ $(LDLIBS)
+
+# Dependencies (add header dependencies if any exist)
+$(OBJECTS): Makefile
 
 clean:
-	rm -f *.o *~ acc2hit validate2hit
+	rm -f *.o *~ acc2hit validate2hit acc2hitSerial
+
+# Optional: install target
+install: all
+	cp acc2hit validate2hit acc2hitSerial /usr/local/bin/
