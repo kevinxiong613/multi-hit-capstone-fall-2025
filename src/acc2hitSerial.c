@@ -260,7 +260,7 @@
              {
                 // in the matrix, for this gene (row), and the patient, set to 1
                 normal_matrix[n * num_samples_normal + matrix_sample_index] = 1;
-                normal_samples_per_gene = 0;
+                normal_samples_per_gene[n]++;
                 break;
              }
           }

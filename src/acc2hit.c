@@ -69,7 +69,7 @@
   *
   ************************************************************************/
  void loadGeneSampleMatrixTumor( FILE *fp_gene_sample_matrix, int num_genes, 
-    int num_samples, int *gene_sample_matrix, char *gene_id, int *tumor_samples_per_gene )
+    int num_samples, int *gene_sample_matrix, char *gene_id, int *tumor_samples_per_gene, int* filtered_tumor_matrix )
  {
     
     int     i, j, k, n, ret_value;
@@ -133,7 +133,15 @@
           exit( 1 );
        }
     }
- 
+    for (int i = 0; i < num_genes; i++) {
+      int temp = 0;
+      for (int j = 0; j < num_samples; j++) { // matrix[gene][patient with the gene]
+         if(gene_sample_matrix[i * num_samples + j] > 0) {
+            filtered_tumor_matrix[i * num_samples + temp] = j; // use tumor[i][filtered[i][temp]] to get the patient with this mutation. This requires a two pointer approach though
+            temp += 1;
+         } 
+      }
+    }
     return;
  
  }
@@ -196,7 +204,7 @@
   *
   ************************************************************************/
  void loadGeneSampleMatrixNormal( FILE *fp_gene_sample_list, int num_genes, 
-    int num_samples_normal, int *normal_matrix, char *gene_id, int *normal_samples_per_gene )
+    int num_samples_normal, int *normal_matrix, char *gene_id, int *normal_samples_per_gene, int* filtered_normal_matrix )
  {
     int     j, n, ret_value;
     char    *line = NULL;
@@ -263,7 +271,7 @@
              {
                 // in the matrix, for this gene (row), and the patient, set to 1
                 normal_matrix[n * num_samples_normal + matrix_sample_index] = 1;
-                normal_samples_per_gene = 0;
+                normal_samples_per_gene[n]++;
                 break;
              }
           }
@@ -274,10 +282,41 @@
           exit( 1 );
        }
     }
- 
+    for (int i = 0; i < num_genes; i++) {
+      int temp = 0;
+      for (int j = 0; j < num_samples_normal; j++) { // matrix[gene][patient with the gene]
+         if(normal_matrix[i * num_samples_normal + j] > 0) {
+            filtered_normal_matrix[i * num_samples_normal + temp] = j; // use tumor[i][filtered[i][temp]] to get the patient with this mutation. This requires a two pointer approach though
+            temp += 1;
+         } 
+      }
+    }
     free( sample_id );
  }
  
+ int countUp(int i1, int i2, int*filtered_tumor_matrix, int*tumor_matrix, int* excluded_samples, int num_samples, int* tumor_samples_per_gene, int exclude) {
+   int s1 = 0;
+   int s2 = 0;
+   int count = 0;
+   int bound1 = tumor_samples_per_gene[i1];
+   int bound2 = tumor_samples_per_gene[i2];
+   while (s1 < bound1 && s2 < bound2) {
+      int sample1 = filtered_tumor_matrix[i1 * num_samples + s1];
+      int sample2 = filtered_tumor_matrix[i2 * num_samples + s2];
+      if (sample1 == sample2) {
+         if (excluded_samples[sample1] == 0 || exclude == 1) {
+            count += 1;
+         }
+         s1 += 1;
+         s2 += 1;
+      } else if (sample1 > sample2) {
+         s2 += 1;
+      } else {
+         s1 += 1;
+      }
+   }
+   return count;
+ }
  
  /***********************************************************************
   * Find combination with smallest lr- 
@@ -292,9 +331,9 @@
  float maxF( int *tumor_matrix, int num_genes, int num_samples_tumor, 
     int *normal_matrix, int num_samples_normal, int *tumor_samples_per_gene, 
     int *normal_samples_per_gene, int *excluded_samples, 
-    int *gene1, int *gene2, float beta )
+    int *gene1, int *gene2, float beta, int*genes_filtered, int num_mutated, int* filtered_tumor_matrix, int* filtered_normal_matrix)
  {
-    int   i1, i2, j;
+    int   mutated1, mutated2, j;
     int   true_pos, false_pos, true_neg, false_neg;
     float ratio, total_ratio, adj_tumor_count, adj_normal_count;
     float f;          /* f-measure */
@@ -314,10 +353,12 @@
       local_i1 = 0;
       local_i2 = 0;
       #pragma omp for collapse(2)
-      for ( i1 = 0; i1 < num_genes; i1++ )
+      for ( mutated1 = 0; mutated1 < num_mutated; mutated1++ )
       {
-         for ( i2 = i1+1; i2 < num_genes; i2++ )
+         for ( mutated2 = mutated1+1; mutated2 < num_mutated; mutated2++ )
          {
+            int i1 = genes_filtered[mutated1];
+            int i2 = genes_filtered[mutated2];
             // temp_tp is the minimum of the 2 genes tumor counts
             // upper bound on the maximum number of genes that have BOTH of these mutated
             temp_tp = tumor_samples_per_gene[i1];
@@ -343,29 +384,21 @@
             // only process if it can beat the best we've seen before
             if ( f_bound > f_max )
             {
+               int exclude = 0;
                true_pos = 0;
-               for ( j = 0; j < num_samples_tumor; j++ )
-               {
-                  // if this sample isn't excluded AND both genes i1 and i2 are mutated, increment true_pos
-                  if ( excluded_samples[j] == 0 )
-                  {
-                     if ( ( tumor_matrix[i1 * num_samples_tumor + j] > 0 ) &&
-                           ( tumor_matrix[i2 * num_samples_tumor + j] > 0 ) )
-                     {
-                        true_pos++;
-                     }
-                  }
-               }
+               true_pos += countUp(i1, i2, filtered_tumor_matrix, tumor_matrix, excluded_samples,  num_samples_tumor, tumor_samples_per_gene, exclude);
                false_pos = 0;
                // false positive counts the number of times both genes are mutated in normal samples
-               for ( j = 0; j < num_samples_normal; j++ )
-               {
-                  if ( ( normal_matrix[i1 * num_samples_normal + j] > 0 ) &&
-                        ( normal_matrix[i2 * num_samples_normal + j] > 0 ) )
-                  {
-                     false_pos++;
-                  }
-               }
+               // for ( j = 0; j < num_samples_normal; j++ )
+               // {
+               //    if ( ( normal_matrix[i1 * num_samples_normal + j] > 0 ) &&
+               //          ( normal_matrix[i2 * num_samples_normal + j] > 0 ) )
+               //    {
+               //       false_pos++;
+               //    }
+               // }
+               exclude = 1;
+               false_pos += countUp(i1, i2, filtered_normal_matrix, normal_matrix, excluded_samples, num_samples_normal, normal_samples_per_gene, exclude);
                if ( true_pos > 0 ) /* avoid divide by zero */
                {
                   false_neg = num_samples_tumor  - true_pos;
@@ -454,7 +487,7 @@
   ************************************************************************/
  int listCombs( int *tumor_matrix, int num_genes, int num_samples_tumor, 
     int *normal_matrix, int num_samples_normal, char *gene_id, 
-    int *tumor_samples_per_gene, int *normal_samples_per_gene, float beta )
+    int *tumor_samples_per_gene, int *normal_samples_per_gene, float beta, int* genes_filtered, int num_mutated, int* filtered_tumor_matrix, int* filtered_normal_matrix )
  {
        /* Check combinations of genes for coverage of samples */
     // tumor_matrix[num_gene][num_patient] = number of mutations for this combination
@@ -493,7 +526,7 @@
        // Calculate the highest f_max score acheived by any 2 combinations of genes and set gene1,gene2 to be that combination
        f_max = maxF( tumor_matrix, num_genes, num_samples_tumor, normal_matrix, 
                      num_samples_normal, tumor_samples_per_gene, normal_samples_per_gene, 
-                     excluded_samples, &gene1, &gene2, beta );
+                     excluded_samples, &gene1, &gene2, beta, genes_filtered, num_mutated, filtered_tumor_matrix, filtered_normal_matrix);
  
        // Exclude samples that include both gene1 and gene2, which affects future f_max calculations
        num_excluded = excludeSamples( gene1, gene2, excluded_samples, tumor_matrix, num_samples_tumor );
@@ -574,6 +607,7 @@
     // allocate memory for a matrix of [num_genes][num_samples], samples is # of patient IDs
     // Also casted the result to be an integer pointer
     tumor_matrix = (int  *)malloc( num_genes * num_samples * sizeof( int ) );
+    int* filtered_tumor_matrix = (int *) malloc(num_genes * num_samples * sizeof(int));
     if ( tumor_matrix == NULL )
     {
        printf( "ERROR: failed to allocate memory for tumor gene_sample_matrix \n" );
@@ -598,7 +632,7 @@
     // pass the allocated file pointer to the data, number of genes, number of patient samples, allocated tumor matrix, 
     // allocated list for gene ids, and allocated list for tumor samples per gene
     loadGeneSampleMatrixTumor( fp_tumor_matrix, num_genes, num_samples, 
-       tumor_matrix, gene_id, tumor_samples_per_gene );
+       tumor_matrix, gene_id, tumor_samples_per_gene, filtered_tumor_matrix );
  
     // finished reading that into the data structures, so no longer need
     fclose( fp_tumor_matrix );
@@ -610,6 +644,7 @@
  
     // Create a similar matrix as tumor_matrix with num_genes x number of patient id samples
     normal_matrix = (int *)malloc( num_genes * num_samples_normal * sizeof( int ) );
+    int* filtered_normal_matrix = (int *) malloc(num_genes * num_samples_normal * sizeof(int));
     if ( normal_matrix == NULL )
     {
        printf( "ERROR: failed to allocate memory for normal gene_sample_matrix \n" );
@@ -627,10 +662,19 @@
     // Pass in file pointer for the normal matrix, pointing at the manifest_normal_normal.txt.geneSampleList file
     // num_genes was obtained earlier based on the tumor samples processing
     loadGeneSampleMatrixNormal( fp_normal_matrix, num_genes, num_samples_normal, 
-       normal_matrix, gene_id, normal_samples_per_gene );
+       normal_matrix, gene_id, normal_samples_per_gene, filtered_normal_matrix );
  
     // finished reading into this so done
     fclose( fp_normal_matrix );
+
+    int num_mutated = 0;
+    int* genes_filtered = (int*)malloc(num_genes * sizeof(int));
+    for (int i = 0; i < num_genes; i++) {
+      if (tumor_samples_per_gene[i] > 0) {
+         genes_filtered[num_mutated] = i;
+         num_mutated += 1;
+     }
+    }
  
     /* Check combinations of genes for coverage of samples */
     // MAIN LOGIC TO FIND IT HERE, EVERYTHING ELSE WAS SETUP!!
@@ -646,7 +690,7 @@
     // beta is 0.1
     num_comb = listCombs( tumor_matrix, num_genes, num_samples, 
        normal_matrix, num_samples_normal, gene_id, 
-       tumor_samples_per_gene, normal_samples_per_gene, beta );
+       tumor_samples_per_gene, normal_samples_per_gene, beta, genes_filtered, num_mutated, filtered_tumor_matrix, filtered_normal_matrix );
     
     // Print the number of 2 hit combinations at the end
     printf( "Num 2-hit combinations = %d  (beta = %f )\n", num_comb, beta );
