@@ -1,12 +1,12 @@
 Num Tumor genes = 19411 tumor samples = 703 
 Num normal samples = 245 
-ENSG00000205277 ENSG00000184956 97 128 F-max =  0.310865 , num excluded 607, tot excluded 607 
-ENSG00000149531 ENSG00000211896 589 729 F-max =  0.264135 , num excluded 54, tot excluded 661 
-ENSG00000185567 ENSG00000090512 168 3256 F-max =  0.260338 , num excluded 18, tot excluded 679 
-ENSG00000170471 ENSG00000205869 3655 4432 F-max =  0.259388 , num excluded 9, tot excluded 688 
-ENSG00000219481 ENSG00000173213 6 754 F-max =  0.258966 , num excluded 5, tot excluded 693 
-ENSG00000178104 ENSG00000275113 22 5026 F-max =  0.258861 , num excluded 4, tot excluded 697 
-ENSG00000105483 ENSG00000197375 8437 17767 F-max =  0.258755 , num excluded 3, tot excluded 700 
-ENSG00000146122 ENSG00000133135 12913 12934 F-max =  0.258650 , num excluded 2, tot excluded 702 
-ENSG00000160336 ENSG00000147654 13856 13905 F-max =  0.258544 , num excluded 1, tot excluded 703 
+(ENSG00000205277, ENSG00000184956) 97 128 F-max =  0.310865 , num excluded 607, tot excluded 607 
+(ENSG00000149531, ENSG00000211896) 589 729 F-max =  0.264135 , num excluded 54, tot excluded 661 
+(ENSG00000185567, ENSG00000090512) 168 3256 F-max =  0.260338 , num excluded 18, tot excluded 679 
+(ENSG00000170471, ENSG00000205869) 3655 4432 F-max =  0.259388 , num excluded 9, tot excluded 688 
+(ENSG00000219481, ENSG00000173213) 6 754 F-max =  0.258966 , num excluded 5, tot excluded 693 
+(ENSG00000188313, ENSG00000185015) 2059 8338 F-max =  0.258861 , num excluded 4, tot excluded 697 
+(ENSG00000005700, ENSG00000141510) 1717 1852 F-max =  0.258755 , num excluded 3, tot excluded 700 
+(ENSG00000159164, ENSG00000105483) 6910 8437 F-max =  0.258650 , num excluded 2, tot excluded 702 
+(ENSG00000069018, ENSG00000167721) 8132 8203 F-max =  0.258544 , num excluded 1, tot excluded 703 
 Num 2-hit combinations = 9  (beta = 0.100000 )
