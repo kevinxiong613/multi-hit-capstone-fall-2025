@@ -6,26 +6,43 @@
 
 ## Identify Combinations for One Cancer Type - Serial performance
 
+If on Mac OS, do:
+```
+brew install gcc
+```
+Otherwise if you're in a linux environment with gcc, change the makefile to have 
+```
+gcc
+```
+instead of
+```
+gcc-15
+```
+
 ```
 cd src 
+make
 ./compute-multihit-combinations.sh BRCA serial
 ```
 
 ## Identify Combinations for One Cancer Type - Parallel performance with sparse matrix
 ```
 cd src 
+make
 ./compute-multihit-combinations.sh BRCA sparse
 ```
 
 ## Identify Combinations for One Cancer Type - Parallel performance with dense matrix
 ```
 cd src 
+make
 ./compute-multihit-combinations.sh BRCA [anything that isn't serial or sparse]
 ```
 
 ## Identify Combinations for One Cancer Type - OpenACC SIMD Parallelization
 ```
 cd src2
+make
 ./compute-multihit-combinations.sh BRCA [anything that isn't serial or sparse]
 ```
 
