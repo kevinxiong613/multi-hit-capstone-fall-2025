@@ -6,39 +6,39 @@
 
 ## Identify Combinations for One Cancer Type - Serial performance
 
-'''
+```
 cd src 
 ./compute-multihit-combinations.sh BRCA serial
-'''
+```
 
 ## Identify Combinations for One Cancer Type - Parallel performance with sparse matrix
-'''
+```
 cd src 
 ./compute-multihit-combinations.sh BRCA sparse
-'''
+```
 
 ## Identify Combinations for One Cancer Type - Parallel performance with dense matrix
-'''
+```
 cd src 
 ./compute-multihit-combinations.sh BRCA [anything that isn't serial or sparse]
-'''
+```
 
 ## Identify Combinations for One Cancer Type - OpenACC SIMD Parallelization
-'''
+```
 cd src2
 ./compute-multihit-combinations.sh BRCA [anything that isn't serial or sparse]
-'''
+```
 
 ## Verify correctness using Bernie's script
 
-'''
+```
 cd src OR cd src2
 python3 addParanthesis.py ../result/BRCA/BRCA-combinations
 python3 addParanthesis.py ../result/BRCA/BRCA-combinations-serial
 python3 addParanthesis.py ../result/BRCA/BRCA-combinations-serial-simd
 
 python3 verifyAccuracy.py ../data/maf2dat-moderate/BRCA.maf2dat.matrix.out.test ../data/maf2dat-moderate/manifest_normal_normal.txt.test.txt.geneSampleList [one of the 3 combinations files from above]
-'''
+```
 
 Note that running add paranthesis will make the original validate script not work anymore.
 
