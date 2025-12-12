@@ -2,10 +2,10 @@
 start=$(date +%s)
 
 cancer=$1
-serial=$2
+type=$2
 echo "Collecting data for " $cancer
 mkdir ../result/$cancer
-if [[ "$serial" == "serial" ]]; then
+if [[ "$type" == "serial" ]]; then
 echo "Doing in serial" $cancer
 ./acc2hitSerial ../data/maf2dat-moderate/$cancer.maf2dat.matrix.out.training ../data/maf2dat-moderate/manifest_normal_normal.txt.training.txt.geneSampleList .1 > ../result/$cancer/$cancer-combinations-serial
 ./validate2hit ../data/maf2dat-moderate/$cancer.maf2dat.matrix.out.test ../result/$cancer/$cancer-combinations-serial
