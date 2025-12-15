@@ -4,6 +4,8 @@
 * We present a fundamentally different approach for identifying the cause of individual instances of cancer: we search for combinations of carcinogenic mutations (multi-hit combinations) instead of driver mutations. 
 * We developed an algorithm that identified a set of multi-hit combinations that differentiate between tumor and normal tissue samples with $91\%$ sensitivity (95% Confidence Interval (CI)=89-92%) and 93%  specificity (95% CI=91-94%) on average for seventeen cancer types. 
 
+Note: If doing on rlogin or glogin, change src/Makefile to be "gcc" instead of "CC = gcc-15". CC = gcc-15 was only used to be compatible with our Macbooks.
+
 ## Identify Combinations for One Cancer Type - Serial performance
 
 If on Mac OS, do:
@@ -40,6 +42,9 @@ make
 ```
 
 ## Identify Combinations for One Cancer Type - OpenACC SIMD Parallelization
+
+Note: SIMD parallelization was done on glogin. If you want to reproduce our results, please do so in glogin.
+
 ```
 cd src2
 make
@@ -50,14 +55,14 @@ make
 
 ```
 cd src OR cd src2
-python3 addParanthesis.py ../result/BRCA/BRCA-combinations
-python3 addParanthesis.py ../result/BRCA/BRCA-combinations-serial
-python3 addParanthesis.py ../result/BRCA/BRCA-combinations-serial-simd
+python3 addParanthesis.py [combinations file]
 
 python3 verifyAccuracy.py ../data/maf2dat-moderate/BRCA.maf2dat.matrix.out.test ../data/maf2dat-moderate/manifest_normal_normal.txt.test.txt.geneSampleList [one of the 3 combinations files from above]
 ```
 
 Note that running add paranthesis will make the original validate script not work anymore.
+
+Running addParanthesis on the same combinations file will cause it to no longer work with verifyAccuracy. Make sure to only run it once per a combinations file!
 
 The goal is to maximize tumor sample coverage and minimize normal sample coverage.
 
